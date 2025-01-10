@@ -1,7 +1,16 @@
 import './App.css';
+import MainMenu from './components/mainMenu';
+import MonthSelection from './components/monthSelection';
 
 function App() {
-  return <div>yolo</div>;
+  // const months = []
+
+  return (
+    <main>
+      <MainMenu />
+      <MonthSelection />
+    </main>
+  );
 }
 
 export default App;
