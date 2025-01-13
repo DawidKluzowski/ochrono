@@ -1,6 +1,6 @@
 function MainMenu() {
   return (
-    <section>
+    <section className="flex flex-col">
       <button>Dni Wolne</button>
       <button>Lista Pracowników</button>
       <button>News</button>
