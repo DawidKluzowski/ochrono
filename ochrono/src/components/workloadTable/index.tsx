@@ -9,51 +9,105 @@ const LIST_OF_EMPLOEEYS = [
   'Optimus Prime',
 ];
 
+let monthWorkload = {};
+
+const GRID_FIRST_COLUMN_SPAN = 6;
+
 function WorkloadTable() {
-  const [curentMonthLength, setCurentMonthLength] = useState(0);
+  const [currentMonthLength, setCurrentMonthLength] = useState(0);
+  const [clickedCells, setClickedCells] = useState({});
 
   useEffect(() => {
     const today = new Date();
-    setCurentMonthLength(getDaysInMonth(today));
+    setCurrentMonthLength(getDaysInMonth(today));
   }, []);
 
+  const numbers = Array.from({ length: currentMonthLength }, (_, i) => i + 1);
+
+  const numberOfColumns = currentMonthLength + GRID_FIRST_COLUMN_SPAN + 3;
+  const numberOfRows = LIST_OF_EMPLOEEYS.length + 1;
+
+  const handleCellClick = (name, day) => {
+    const selectedDays = clickedCells[name] || [];
+
+    const isAdjacent = selectedDays.some(
+      (selectedDay) => Math.abs(selectedDay - day) === 1
+    );
+
+    if (isAdjacent) {
+      alert('You cannot select two days in a row for the same person.');
+      return;
+    }
+
+    setClickedCells((prev) => {
+      const newClickedCells = { ...prev };
+      if (!newClickedCells[name]) {
+        newClickedCells[name] = [];
+      }
+
+      if (newClickedCells[name].includes(day)) {
+        newClickedCells[name] = newClickedCells[name].filter((d) => d !== day);
+      } else {
+        newClickedCells[name] = [...newClickedCells[name], day];
+      }
+
+      return newClickedCells;
+    });
+
+    if (!monthWorkload[name]) {
+      monthWorkload[name] = [];
+    }
+
+    if (monthWorkload[name].includes(day)) {
+      monthWorkload[name] = monthWorkload[name].filter((d) => d !== day);
+    } else {
+      monthWorkload[name] = [...monthWorkload[name], day];
+    }
+  };
+
   return (
-    <div className="relative">
-      <div
-        className={`text-sm grid grid-cols-[repeat(${10 + curentMonthLength},_minmax(0,_1fr))] auto-cols-auto grid-flow-col overflow-x-hidden`}
-      >
-        <div className="col-span-6 p-1 m-1"></div>
-        {Array.from({ length: curentMonthLength }, (_, index) => (
-          <div
-            key={Math.random()}
-            className={`${
-              (index + 1) % 2 === 1 ? 'bg-gray-300' : 'bg-gray-400'
-            } m-4 text-center w-5 h-5 gap-3`}
-          >
-            {index + 1}
+    <div
+      className={`grid gap-1`}
+      style={{
+        gridTemplateColumns: `repeat(${numberOfColumns}, minmax(0, 2rem))`,
+        gridTemplateRows: `repeat(${numberOfRows}, minmax(0, 2rem))`,
+      }}
+    >
+      <div className="col-span-6" />
+
+      {numbers.map((number, colIndex) => (
+        <div
+          key={`${number}${colIndex}`}
+          className={`border border-black p-1 text-center ${
+            colIndex % 2 === 0 ? 'bg-gray-200' : 'bg-white'
+          }`}
+        >
+          {number}
+        </div>
+      ))}
+
+      {LIST_OF_EMPLOEEYS.map((name) => (
+        <React.Fragment key={name}>
+          <div className="border col-span-6 border-black p-1 text-center">
+            {name}
           </div>
-        ))}
-      </div>
-      {LIST_OF_EMPLOEEYS.map((employee) => {
-        return (
-          <div
-            key={employee}
-            className={`text-sm grid grid-cols-[repeat(${10 + curentMonthLength},_minmax(0,_1fr))] auto-cols-auto grid-flow-col w-full overflow-x-hidden h-6 mb-2`}
-          >
-            <div className="col-span-6 bg-slate-600 text-white h-5 text-center ">
-              {employee}
-            </div>
-            {Array.from({ length: curentMonthLength }, (_, index) => (
+          {numbers.map((number, colIndex) => {
+            const isClicked = clickedCells[name]?.includes(number);
+
+            return (
               <div
-                key={Math.random()}
-                className={`${
-                  (index + 1) % 2 === 1 ? 'bg-gray-300' : 'bg-gray-400'
-                } ml-4 text-center w-5 h-5 cursor-pointer`}
+                key={`${colIndex}${number}`}
+                className={`border border-black p-1 text-center ${
+                  colIndex % 2 === 0 ? 'bg-gray-200' : 'bg-white'
+                } ${
+                  isClicked ? '!bg-green-300' : 'hover:border-opacity-25'
+                } cursor-pointer`}
+                onClick={() => handleCellClick(name, number)}
               />
-            ))}
-          </div>
-        );
-      })}
+            );
+          })}
+        </React.Fragment>
+      ))}
     </div>
   );
 }
