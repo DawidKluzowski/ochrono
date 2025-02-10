@@ -1,5 +1,10 @@
 import { getDaysInMonth } from 'date-fns';
 import React, { useEffect, useState } from 'react';
+import { MonthWorkload } from '../../types';
+
+interface monthWordkload {
+  name: 
+}
 
 const LIST_OF_EMPLOEEYS = [
   'Mega Lodon',
@@ -9,13 +14,13 @@ const LIST_OF_EMPLOEEYS = [
   'Optimus Prime',
 ];
 
-let monthWorkload = {};
+let monthWorkload: MonthWorkload = {};
 
 const GRID_FIRST_COLUMN_SPAN = 6;
 
 function WorkloadTable() {
   const [currentMonthLength, setCurrentMonthLength] = useState(0);
-  const [clickedCells, setClickedCells] = useState({});
+  const [clickedCells, setClickedCells] = useState<MonthWorkload>({});
 
   useEffect(() => {
     const today = new Date();
@@ -27,7 +32,7 @@ function WorkloadTable() {
   const numberOfColumns = currentMonthLength + GRID_FIRST_COLUMN_SPAN + 3;
   const numberOfRows = LIST_OF_EMPLOEEYS.length + 1;
 
-  const handleCellClick = (name, day) => {
+  const handleCellClick = (name: string, day: number): void => {
     const selectedDays = clickedCells[name] || [];
 
     const isAdjacent = selectedDays.some(
