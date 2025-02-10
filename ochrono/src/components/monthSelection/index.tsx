@@ -8,7 +8,7 @@ function MonthSelection() {
   useEffect(() => {
     const currentDateYear = new Date().getFullYear();
     const january = setMonth(new Date(currentDateYear, 1, 1), 0);
-    const yearMonths = Array.from({ length: 11 }).map((_, i) => {
+    const yearMonths = Array.from({ length: 12 }).map((_, i) => {
       const result = add(january, {
         months: i,
       });
@@ -18,12 +18,12 @@ function MonthSelection() {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col">
       {months.map((month) => {
         return (
-          <div key={month.toISOString()}>
+          <button key={month.toISOString()}>
             {format(month, 'LLLL', { locale: pl })}
-          </div>
+          </button>
         );
       })}
     </div>
