@@ -2,10 +2,6 @@ import { getDaysInMonth } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { MonthWorkload } from '../../types';
 
-interface monthWordkload {
-  name: 
-}
-
 const LIST_OF_EMPLOEEYS = [
   'Mega Lodon',
   'KungFu Panda',
